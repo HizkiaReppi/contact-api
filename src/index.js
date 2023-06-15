@@ -1,9 +1,4 @@
-import express from 'express';
+import { logger } from './utils/logging.js';
+import { server } from './utils/server.js';
 
-const app = express();
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.listen(3001, () => console.log('Server running on port 3001'));
+server.listen(3001, () => logger.info('Server running on port 3001'));

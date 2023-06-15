@@ -18,6 +18,11 @@
     "no-unused-vars": "off",
     "no-underscore-dangle": "off",
     "no-param-reassign": "off",
+    "import/prefer-default-export": "off",
+    "linebreak-style": "off",
+    "comma-dangle": "off",
+    "import/extensions": "off",
+    "arrow-parens": "off",
     "semi": [
       "error",
       "always"
@@ -25,14 +30,6 @@
     "quotes": [
       "error",
       "single"
-    ],
-    "comma-dangle": [
-      "error",
-      "never"
-    ],
-    "arrow-parens": [
-      "error",
-      "as-needed"
     ],
     "camelcase": [
       "error",
