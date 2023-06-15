@@ -23,6 +23,7 @@
     "comma-dangle": "off",
     "import/extensions": "off",
     "arrow-parens": "off",
+    "no-undef": "off",
     "semi": [
       "error",
       "always"
