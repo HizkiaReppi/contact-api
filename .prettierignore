@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+public
+coverage
+prisma
+
+package.json
+package-lock.json
+
+.eslintrc.json
+.prettierrc.json

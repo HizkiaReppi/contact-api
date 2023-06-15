@@ -1,0 +1,10 @@
+node_modules/
+coverage/
+build/
+public/
+
+package-lock.json
+
+.env
+.env-local
+.env-production
