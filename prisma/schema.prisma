@@ -9,3 +9,47 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique @db.VarChar(100)
+  name      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  token     String?  @db.VarChar(100)
+  contacts  Contact[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Contact {
+  id          String   @id @default(uuid())
+  first_name  String   @db.VarChar(100)
+  last_name   String?  @db.VarChar(100)
+  email       String?  @db.VarChar(255)
+  phone       String?  @db.VarChar(20)
+  username    String   @db.VarChar(100)
+  user        User     @relation(fields: [username], references: [id])
+  addresses   Address[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("contacts")
+}
+
+model Address {
+  id          String   @id @default(uuid())
+  street      String?  @db.VarChar(255)
+  city        String?  @db.VarChar(100)
+  province    String?  @db.VarChar(100)
+  country     String   @db.VarChar(100)
+  postal_code String   @db.VarChar(10)
+  contactId   String
+  contact     Contact  @relation(fields: [contactId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("addresses")
+}
