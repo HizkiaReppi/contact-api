@@ -1,23 +1,19 @@
 import supertest from 'supertest';
 import { server } from '../src/utils/server.js';
-import { prismaClient } from '../src/utils/database.js';
 import { logger } from '../src/utils/logging.js';
+import { createTestUser, removeTestUser } from '../src/utils/test.js';
 
-describe('POST /api/users', () => {
+describe('POST /api/users/register', () => {
   afterEach(async () => {
-    await prismaClient.user.deleteMany({
-      where: {
-        username: 'admin',
-      },
-    });
+    await removeTestUser();
   });
 
   it('should can register new user', async () => {
     const result = await supertest(server).post('/api/users/register').send({
-      username: 'admin',
-      name: 'Admin',
-      email: 'admin@gmail.com',
-      password: 'admin123',
+      username: 'test',
+      name: 'test',
+      email: 'test@gmail.com',
+      password: 'test123',
     });
 
     logger.info(result.body);
@@ -26,9 +22,9 @@ describe('POST /api/users', () => {
     expect(result.body.status).toBe('true');
     expect(result.body.code).toBe(201);
     expect(result.body.message).toBe('Register Success');
-    expect(result.body.data.username).toBe('admin');
-    expect(result.body.data.name).toBe('Admin');
-    expect(result.body.data.email).toBe('admin@gmail.com');
+    expect(result.body.data.username).toBe('test');
+    expect(result.body.data.name).toBe('test');
+    expect(result.body.data.email).toBe('test@gmail.com');
     expect(result.body.data.password).toBeUndefined();
   });
 
@@ -50,10 +46,10 @@ describe('POST /api/users', () => {
 
   it('should reject if username already exists', async () => {
     let result = await supertest(server).post('/api/users/register').send({
-      username: 'admin',
-      name: 'Admin',
-      email: 'admin@gmail.com',
-      password: 'admin123',
+      username: 'test',
+      name: 'test',
+      email: 'test@gmail.com',
+      password: 'test123',
     });
 
     logger.info(result.body);
@@ -62,16 +58,16 @@ describe('POST /api/users', () => {
     expect(result.body.status).toBe('true');
     expect(result.body.code).toBe(201);
     expect(result.body.message).toBe('Register Success');
-    expect(result.body.data.username).toBe('admin');
-    expect(result.body.data.name).toBe('Admin');
-    expect(result.body.data.email).toBe('admin@gmail.com');
+    expect(result.body.data.username).toBe('test');
+    expect(result.body.data.name).toBe('test');
+    expect(result.body.data.email).toBe('test@gmail.com');
     expect(result.body.data.password).toBeUndefined();
 
     result = await supertest(server).post('/api/users/register').send({
-      username: 'admin',
-      name: 'Admin',
-      email: 'admin@gmail.com',
-      password: 'admin123',
+      username: 'test',
+      name: 'test',
+      email: 'test@gmail.com',
+      password: 'test123',
     });
 
     logger.info(result.body);
@@ -80,5 +76,73 @@ describe('POST /api/users', () => {
     expect(result.body.status).toBe('false');
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBe('Username already exists');
+  });
+});
+
+describe('POST /api/users/login', () => {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it('should can login', async () => {
+    const result = await supertest(server).post('/api/users/login').send({
+      username: 'test',
+      password: 'test123',
+    });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe('true');
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Login Success');
+    expect(result.body.data.token).toBeDefined();
+    expect(result.body.data.token).not.toBe('test-token');
+  });
+
+  it('should reject login if request is invalid', async () => {
+    const result = await supertest(server).post('/api/users/login').send({
+      username: '',
+      password: '',
+    });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(400);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(400);
+    expect(result.body.errors).toBeDefined();
+  });
+
+  it('should reject login if password is wrong', async () => {
+    const result = await supertest(server).post('/api/users/login').send({
+      username: 'test',
+      password: 'wrongTest',
+    });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(401);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(401);
+    expect(result.body.errors).toBe('Username or password wrong');
+  });
+
+  it('should reject login if username is wrong', async () => {
+    const result = await supertest(server).post('/api/users/login').send({
+      username: 'wrongUsername',
+      password: 'wrongTest',
+    });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(401);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(401);
+    expect(result.body.errors).toBe('Username or password wrong');
   });
 });

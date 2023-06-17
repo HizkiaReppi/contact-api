@@ -24,6 +24,8 @@
     "import/extensions": "off",
     "arrow-parens": "off",
     "no-undef": "off",
+    "import/no-named-as-default-member": "off",
+    "arrow-body-style": "off",
     "semi": [
       "error",
       "always"

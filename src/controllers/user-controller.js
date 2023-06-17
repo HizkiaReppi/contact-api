@@ -15,6 +15,22 @@ const register = async (req, res, next) => {
   }
 };
 
+const login = async (req, res, next) => {
+  try {
+    const result = await userService.login(req.body);
+
+    res.status(200).json({
+      status: 'true',
+      code: 200,
+      message: 'Login Success',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   register,
+  login,
 };

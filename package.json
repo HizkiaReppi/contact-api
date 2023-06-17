@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "jest -i",
     "format": "prettier --write \"src/**/*.js\"",
     "lint": "eslint \"src/**/*.js\""
@@ -13,7 +14,9 @@
   "jest": {
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
-    }
+    },
+    "verbose": true,
+    "testMatch": ["**/*.test.js"]
   },
   "author": "Hizkia Reppi",
   "license": "ISC",
