@@ -1,7 +1,12 @@
 import supertest from 'supertest';
+import bcrypt from 'bcrypt';
 import { server } from '../src/utils/server.js';
 import { logger } from '../src/utils/logging.js';
-import { createTestUser, removeTestUser } from '../src/utils/test.js';
+import {
+  createTestUser,
+  getTestUser,
+  removeTestUser,
+} from '../src/utils/test.js';
 
 describe('POST /api/users/register', () => {
   afterEach(async () => {
@@ -176,6 +181,114 @@ describe('GET /api/users/current', () => {
     const result = await supertest(server)
       .get('/api/users/current')
       .set('Authorization', 'tokenInvalid');
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(401);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(401);
+    expect(result.body.errors).toBe('Unauthorized');
+  });
+});
+
+describe('PATCH /api/users/current', () => {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it('should can update user', async () => {
+    const result = await supertest(server)
+      .patch('/api/users/current')
+      .set('Authorization', 'test-token')
+      .send({
+        name: 'Admin',
+        email: 'admin@gmail.com',
+        password: 'admin123',
+      });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe('true');
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Update Data Success');
+    expect(result.body.data.username).toBe('test');
+    expect(result.body.data.name).toBe('Admin');
+    expect(result.body.data.email).toBe('admin@gmail.com');
+
+    const user = await getTestUser();
+    expect(await bcrypt.compare('admin123', user.password)).toBe(true);
+  });
+
+  it('should can update user name', async () => {
+    const result = await supertest(server)
+      .patch('/api/users/current')
+      .set('Authorization', 'test-token')
+      .send({
+        name: 'Admin',
+      });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe('true');
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Update Data Success');
+    expect(result.body.data.username).toBe('test');
+    expect(result.body.data.name).toBe('Admin');
+    expect(result.body.data.email).toBe('test@gmail.com');
+  });
+
+  it('should can update user email', async () => {
+    const result = await supertest(server)
+      .patch('/api/users/current')
+      .set('Authorization', 'test-token')
+      .send({
+        email: 'admin@gmail.com',
+      });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe('true');
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Update Data Success');
+    expect(result.body.data.username).toBe('test');
+    expect(result.body.data.name).toBe('test');
+    expect(result.body.data.email).toBe('admin@gmail.com');
+  });
+
+  it('should can update user password', async () => {
+    const result = await supertest(server)
+      .patch('/api/users/current')
+      .set('Authorization', 'test-token')
+      .send({
+        password: 'admin123',
+      });
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe('true');
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Update Data Success');
+    expect(result.body.data.username).toBe('test');
+    expect(result.body.data.name).toBe('test');
+    expect(result.body.data.email).toBe('test@gmail.com');
+
+    const user = await getTestUser();
+    expect(await bcrypt.compare('admin123', user.password)).toBe(true);
+  });
+
+  it('should reject if request is not valid', async () => {
+    const result = await supertest(server)
+      .patch('/api/users/current')
+      .set('Authorization', 'wrong-token')
+      .send({});
 
     logger.info(result.body);
 

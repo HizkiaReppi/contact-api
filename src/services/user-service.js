@@ -4,6 +4,7 @@ import {
   getUserValidation,
   loginUserValidation,
   registerUserValidation,
+  updateUserValidation,
 } from '../validations/user-validation.js';
 import validate from '../validations/validation.js';
 import ResponseError from '../errors/ResponseError.js';
@@ -88,6 +89,8 @@ const get = async (username) => {
       username: true,
       name: true,
       email: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 
@@ -98,8 +101,49 @@ const get = async (username) => {
   return user;
 };
 
+const update = async (payload) => {
+  const user = validate(updateUserValidation, payload);
+
+  const totalUserInDatabase = await prismaClient.user.count({
+    where: {
+      username: user.username,
+    },
+  });
+
+  if (totalUserInDatabase !== 1) {
+    throw new ResponseError(404, 'User is not found');
+  }
+
+  const data = {};
+  if (user.name) {
+    data.name = user.name;
+  }
+
+  if (user.email) {
+    data.email = user.email;
+  }
+
+  if (user.password) {
+    data.password = await bcrypt.hash(user.password, 10);
+  }
+
+  return prismaClient.user.update({
+    where: {
+      username: user.username,
+    },
+    data,
+    select: {
+      username: true,
+      name: true,
+      email: true,
+      updatedAt: true,
+    },
+  });
+};
+
 export default {
   register,
   login,
   get,
+  update,
 };
