@@ -298,3 +298,42 @@ describe('PATCH /api/users/current', () => {
     expect(result.body.errors).toBe('Unauthorized');
   });
 });
+
+describe('DELETE /api/users/logout', () => {
+  beforeEach(async () => {
+    await createTestUser();
+  });
+
+  afterEach(async () => {
+    await removeTestUser();
+  });
+
+  it('should can logout', async () => {
+    const result = await supertest(server)
+      .delete('/api/users/logout')
+      .set('Authorization', 'test-token');
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe('true');
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Logout Success');
+
+    const user = await getTestUser();
+    expect(user.token).toBeNull();
+  });
+
+  it('should reject logout if token is invalid', async () => {
+    const result = await supertest(server)
+      .delete('/api/users/logout')
+      .set('Authorization', 'wrong-token');
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(401);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(401);
+    expect(result.body.errors).toBe('Unauthorized');
+  });
+});

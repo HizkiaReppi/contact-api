@@ -26,9 +26,5 @@ export const getTestUser = async () => {
     where: {
       username: 'test',
     },
-    select: {
-      username: true,
-      password: true,
-    },
   });
 };
