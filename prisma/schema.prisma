@@ -30,8 +30,8 @@ model Contact {
   last_name   String?  @db.VarChar(100)
   email       String?  @db.VarChar(255)
   phone       String?  @db.VarChar(20)
-  username    String   @db.VarChar(100)
-  user        User     @relation(fields: [username], references: [id])
+  userId  String   @db.VarChar(191)
+  user        User     @relation(fields: [userId], references: [id])
   addresses   Address[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
