@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import { server } from '../src/utils/server.js';
 import { logger } from '../src/utils/logging.js';
 import {
+  createManyTestContacts,
   createTestContact,
   createTestUser,
   getTestContact,
@@ -180,5 +181,112 @@ describe('PUT /api/contact/:contactId', () => {
     expect(result.body.status).toBe('false');
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
+  });
+});
+
+describe('GET /api/contacts', () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createManyTestContacts();
+  });
+
+  afterEach(async () => {
+    await removeAllTestContacts();
+    await removeTestUser();
+  });
+
+  it('should can search without parameter', async () => {
+    const result = await supertest(server)
+      .get('/api/contacts')
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Search Data Contacts Success');
+    expect(result.body.data.length).toBe(10);
+    expect(result.body.meta.page).toBe(1);
+    expect(result.body.meta.total_page).toBe(2);
+    expect(result.body.meta.total_data).toBe(15);
+  });
+
+  it('should can search to page 2', async () => {
+    const result = await supertest(server)
+      .get('/api/contacts')
+      .query({
+        page: 2,
+      })
+      .set('Authorization', 'test-token');
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Search Data Contacts Success');
+    expect(result.body.data.length).toBe(5);
+    expect(result.body.meta.page).toBe(2);
+    expect(result.body.meta.total_page).toBe(2);
+    expect(result.body.meta.total_data).toBe(15);
+  });
+
+  it('should can search using name', async () => {
+    const result = await supertest(server)
+      .get('/api/contacts')
+      .query({
+        name: 'test 1',
+      })
+      .set('Authorization', 'test-token');
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Search Data Contacts Success');
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.meta.page).toBe(1);
+    expect(result.body.meta.total_page).toBe(1);
+    expect(result.body.meta.total_data).toBe(6);
+  });
+
+  it('should can search using email', async () => {
+    const result = await supertest(server)
+      .get('/api/contacts')
+      .query({
+        email: 'test1',
+      })
+      .set('Authorization', 'test-token');
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Search Data Contacts Success');
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.meta.page).toBe(1);
+    expect(result.body.meta.total_page).toBe(1);
+    expect(result.body.meta.total_data).toBe(6);
+  });
+
+  it('should can search using phone', async () => {
+    const result = await supertest(server)
+      .get('/api/contacts')
+      .query({
+        phone: '08234567891',
+      })
+      .set('Authorization', 'test-token');
+
+    logger.info(result.body);
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Search Data Contacts Success');
+    expect(result.body.data.length).toBe(6);
+    expect(result.body.meta.page).toBe(1);
+    expect(result.body.meta.total_page).toBe(1);
+    expect(result.body.meta.total_data).toBe(6);
   });
 });

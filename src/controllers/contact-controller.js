@@ -27,6 +27,7 @@ const get = async (req, res, next) => {
     next(error);
   }
 };
+
 const update = async (req, res, next) => {
   try {
     const { contactId } = req.params;
@@ -45,8 +46,33 @@ const update = async (req, res, next) => {
   }
 };
 
+const search = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const request = {
+      name: req.query.name,
+      email: req.query.email,
+      phone: req.query.phone,
+      page: req.query.page,
+      size: req.query.size,
+    };
+
+    const { data, meta } = await contactService.search(user, request);
+    res.status(200).json({
+      status: true,
+      code: 200,
+      message: 'Search Data Contacts Success',
+      data,
+      meta,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   create,
   get,
   update,
+  search,
 };

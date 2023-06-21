@@ -2,6 +2,7 @@ import validate from '../validations/validation.js';
 import {
   createContactValidation,
   getContactValidation,
+  searchContactValidation,
   updateContactValidation,
 } from '../validations/contact-validation.js';
 import { prismaClient } from '../utils/database.js';
@@ -85,8 +86,74 @@ const update = async (user, payload) => {
   });
 };
 
+const search = async (user, payload) => {
+  payload = validate(searchContactValidation, payload);
+
+  const skip = (payload.page - 1) * payload.size;
+  const filters = [];
+
+  filters.push({
+    userId: user.id,
+  });
+
+  if (payload.name) {
+    filters.push({
+      OR: [
+        {
+          first_name: {
+            contains: payload.name,
+          },
+        },
+        {
+          last_name: {
+            contains: payload.name,
+          },
+        },
+      ],
+    });
+  }
+  if (payload.email) {
+    filters.push({
+      email: {
+        contains: payload.email,
+      },
+    });
+  }
+  if (payload.phone) {
+    filters.push({
+      phone: {
+        contains: payload.phone,
+      },
+    });
+  }
+
+  const contacts = await prismaClient.contact.findMany({
+    where: {
+      AND: filters,
+    },
+    take: payload.size,
+    skip,
+  });
+
+  const totalItems = await prismaClient.contact.count({
+    where: {
+      AND: filters,
+    },
+  });
+
+  return {
+    data: contacts,
+    meta: {
+      page: payload.page,
+      total_page: Math.ceil(totalItems / payload.size),
+      total_data: totalItems,
+    },
+  };
+};
+
 export default {
   create,
   get,
   update,
+  search,
 };

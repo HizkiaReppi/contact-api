@@ -26,6 +26,9 @@
     "no-undef": "off",
     "import/no-named-as-default-member": "off",
     "arrow-body-style": "off",
+    "newline-per-chained-call": "off",
+    "no-plusplus": "off",
+    "no-await-in-loop": "off",
     "semi": [
       "error",
       "always"
