@@ -27,8 +27,26 @@ const get = async (req, res, next) => {
     next(error);
   }
 };
+const update = async (req, res, next) => {
+  try {
+    const { contactId } = req.params;
+    const request = req.body;
+    request.id = contactId;
+
+    const result = await contactService.update(req.user, request);
+    res.status(200).json({
+      status: true,
+      code: 200,
+      message: 'Update Data Contact Success',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 export default {
   create,
   get,
+  update,
 };
