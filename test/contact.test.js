@@ -290,3 +290,42 @@ describe('GET /api/contacts', () => {
     expect(result.body.meta.total_data).toBe(6);
   });
 });
+
+describe('DELETE /api/contacts/:contactId', () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestContact();
+  });
+
+  afterEach(async () => {
+    await removeAllTestContacts();
+    await removeTestUser();
+  });
+
+  it('should can delete contact', async () => {
+    let testContact = await getTestContact();
+    const result = await supertest(server)
+      .delete(`/api/contacts/${testContact.id}`)
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Remove Data Contact Success');
+
+    testContact = await getTestContact();
+    expect(testContact).toBeNull();
+  });
+
+  it('should reject if contact is not found', async () => {
+    const testContact = await getTestContact();
+    const result = await supertest(server)
+      .delete(`/api/contacts/${testContact.id}-wrong`)
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(404);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(404);
+    expect(result.body.errors).toBe('Contact is not found');
+  });
+});

@@ -70,9 +70,23 @@ const search = async (req, res, next) => {
   }
 };
 
+const remove = async (req, res, next) => {
+  try {
+    await contactService.remove(req.user, req.params.contactId);
+    res.status(200).json({
+      status: true,
+      code: 200,
+      message: 'Remove Data Contact Success',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   create,
   get,
   update,
   search,
+  remove,
 };
