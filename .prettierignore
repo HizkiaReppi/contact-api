@@ -4,9 +4,12 @@ build
 public
 coverage
 prisma
+docs
 
 package.json
 package-lock.json
+babel.config.json
+vercel.json
 
 .eslintrc.json
 .prettierrc.json
