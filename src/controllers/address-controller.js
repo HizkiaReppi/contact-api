@@ -70,9 +70,26 @@ const update = async (req, res, next) => {
   }
 };
 
+const remove = async (req, res, next) => {
+  try {
+    const { contactId, addressId } = req.params;
+
+    await addressService.remove(req.user, contactId, addressId);
+
+    res.status(200).json({
+      status: true,
+      code: 200,
+      message: 'Remove Data Address Success',
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   create,
   get,
   list,
   update,
+  remove,
 };
