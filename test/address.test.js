@@ -1,8 +1,10 @@
 import supertest from 'supertest';
 import { server } from '../src/utils/server.js';
 import {
+  createTestAddress,
   createTestContact,
   createTestUser,
+  getTestAddress,
   getTestContact,
   removeAllTestAddresses,
   removeAllTestContacts,
@@ -38,6 +40,7 @@ describe('POST /api/contacts/:contactId/addresses', () => {
     expect(result.status).toBe(201);
     expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(201);
+    expect(result.body.message).toBe('Create Data Address Success');
     expect(result.body.data.id).toBeDefined();
     expect(result.body.data.street).toBe('street test');
     expect(result.body.data.city).toBe('city test');
@@ -84,5 +87,67 @@ describe('POST /api/contacts/:contactId/addresses', () => {
     expect(result.body.status).toBe('false');
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
+  });
+});
+
+describe('GET /api/contacts/:contactId/addresses/:addressId', () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestContact();
+    await createTestAddress();
+  });
+
+  afterEach(async () => {
+    await removeAllTestAddresses();
+    await removeAllTestContacts();
+    await removeTestUser();
+  });
+
+  it('should can get contact', async () => {
+    const testContact = await getTestContact();
+    const testAddress = await getTestAddress();
+
+    const result = await supertest(server)
+      .get(`/api/contacts/${testContact.id}/addresses/${testAddress.id}`)
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Get Data Address Success');
+    expect(result.body.data.id).toBeDefined();
+    expect(result.body.data.street).toBe('street test');
+    expect(result.body.data.city).toBe('city test');
+    expect(result.body.data.province).toBe('province test');
+    expect(result.body.data.country).toBe('indonesia');
+    expect(result.body.data.postal_code).toBe('234234');
+  });
+
+  it('should reject if contact is not found', async () => {
+    const testContact = await getTestContact();
+    const testAddress = await getTestAddress();
+
+    const result = await supertest(server)
+      .get(`/api/contacts/${testContact.id}-wrong/addresses/${testAddress.id}`)
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(404);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(404);
+    expect(result.body.errors).toBe('Contact is not found');
+  });
+
+  it('should reject if address is not found', async () => {
+    const testContact = await getTestContact();
+    const testAddress = await getTestAddress();
+
+    const result = await supertest(server)
+      .get(`/api/contacts/${testContact.id}/addresses/${testAddress.id}-wrong`)
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(404);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(404);
+    expect(result.body.errors).toBe('Address is not found');
   });
 });
