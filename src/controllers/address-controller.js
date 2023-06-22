@@ -36,7 +36,23 @@ const get = async (req, res, next) => {
   }
 };
 
+const list = async (req, res, next) => {
+  try {
+    const result = await addressService.list(req.user, req.params.contactId);
+
+    res.status(200).json({
+      status: true,
+      code: 200,
+      message: 'Get List Data Addresses Success',
+      data: result,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   create,
   get,
+  list,
 };

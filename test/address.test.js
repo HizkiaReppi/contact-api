@@ -151,3 +151,44 @@ describe('GET /api/contacts/:contactId/addresses/:addressId', () => {
     expect(result.body.errors).toBe('Address is not found');
   });
 });
+
+describe('GET /api/contacts/:contactId/addresses', () => {
+  beforeEach(async () => {
+    await createTestUser();
+    await createTestContact();
+    await createTestAddress();
+  });
+
+  afterEach(async () => {
+    await removeAllTestAddresses();
+    await removeAllTestContacts();
+    await removeTestUser();
+  });
+
+  it('should can list addresses', async () => {
+    const testContact = await getTestContact();
+
+    const result = await supertest(server)
+      .get(`/api/contacts/${testContact.id}/addresses`)
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(200);
+    expect(result.body.status).toBe(true);
+    expect(result.body.code).toBe(200);
+    expect(result.body.message).toBe('Get List Data Addresses Success');
+    expect(result.body.data.length).toBe(1);
+  });
+
+  it('should reject if contact is not found', async () => {
+    const testContact = await getTestContact();
+
+    const result = await supertest(server)
+      .get(`/api/contacts/${testContact.id}-wrong/addresses`)
+      .set('Authorization', 'test-token');
+
+    expect(result.status).toBe(404);
+    expect(result.body.status).toBe('false');
+    expect(result.body.code).toBe(404);
+    expect(result.body.errors).toBe('Contact is not found');
+  });
+});

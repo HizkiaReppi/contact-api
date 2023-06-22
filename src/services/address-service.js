@@ -73,7 +73,26 @@ const get = async (user, contactId, addressId) => {
   return address;
 };
 
+const list = async (user, contactId) => {
+  contactId = await checkContactMustExists(user, contactId);
+
+  return prismaClient.address.findMany({
+    where: {
+      contactId,
+    },
+    select: {
+      id: true,
+      street: true,
+      city: true,
+      province: true,
+      country: true,
+      postal_code: true,
+    },
+  });
+};
+
 export default {
   create,
   get,
+  list,
 };
