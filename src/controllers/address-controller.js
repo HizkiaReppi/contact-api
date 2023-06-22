@@ -51,8 +51,28 @@ const list = async (req, res, next) => {
   }
 };
 
+const update = async (req, res, next) => {
+  try {
+    const { contactId, addressId } = req.params;
+    const request = req.body;
+    request.id = addressId;
+
+    const result = await addressService.update(req.user, contactId, request);
+
+    res.status(200).json({
+      status: true,
+      code: 200,
+      message: 'Update Data Address Success',
+      data: result,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   create,
   get,
   list,
+  update,
 };

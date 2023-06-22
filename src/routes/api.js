@@ -27,5 +27,9 @@ userRouter.get(
   addressController.get
 );
 userRouter.get('/api/contacts/:contactId/addresses', addressController.list);
+userRouter.put(
+  '/api/contacts/:contactId/addresses/:addressId',
+  addressController.update
+);
 
 export { userRouter };
