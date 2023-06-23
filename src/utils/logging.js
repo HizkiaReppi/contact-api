@@ -1,7 +1,14 @@
-import winston from 'winston';
+/* eslint-disable import/no-extraneous-dependencies */
+import pino from 'pino';
+import pretty from 'pino-pretty';
+import moment from 'moment';
 
-export const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [new winston.transports.Console({})],
-});
+export const logger = pino(
+  {
+    base: {
+      pid: false,
+    },
+    timestamp: () => `,"time":"${moment().format()}"`,
+  },
+  pretty()
+);

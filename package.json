@@ -19,7 +19,9 @@
       "^.+\\.[t|j]sx?$": "babel-jest"
     },
     "verbose": true,
-    "testMatch": ["**/*.test.js"]
+    "testMatch": [
+      "**/*.test.js"
+    ]
   },
   "husky": {
     "hooks": {
@@ -38,8 +40,10 @@
     "express": "^4.18.2",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.0",
-    "uuid": "^9.0.0",
-    "winston": "^3.9.0"
+    "moment": "^2.29.4",
+    "pino": "^8.14.1",
+    "pino-pretty": "^10.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.5",

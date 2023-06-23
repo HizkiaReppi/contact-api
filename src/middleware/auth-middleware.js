@@ -1,9 +1,12 @@
 import { prismaClient } from '../utils/database.js';
+import { logger } from '../utils/logging.js';
 
 export const authMiddleware = async (req, res, next) => {
   const token = req.get('Authorization');
 
   if (!token) {
+    logger.error('Unauthorized');
+
     res
       .status(401)
       .json({
@@ -20,6 +23,8 @@ export const authMiddleware = async (req, res, next) => {
     });
 
     if (!user) {
+      logger.error('Unauthorized');
+
       res
         .status(401)
         .json({

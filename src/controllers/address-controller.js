@@ -1,4 +1,5 @@
 import addressService from '../services/address-service.js';
+import { logger } from '../utils/logging.js';
 
 const create = async (req, res, next) => {
   try {
@@ -7,6 +8,8 @@ const create = async (req, res, next) => {
       req.params.contactId,
       req.body
     );
+
+    logger.info('Create Data Address Success');
 
     res.status(201).json({
       status: true,
@@ -25,6 +28,8 @@ const get = async (req, res, next) => {
 
     const result = await addressService.get(req.user, contactId, addressId);
 
+    logger.info('Get Data Address Success');
+
     res.status(200).json({
       status: true,
       code: 200,
@@ -39,6 +44,8 @@ const get = async (req, res, next) => {
 const list = async (req, res, next) => {
   try {
     const result = await addressService.list(req.user, req.params.contactId);
+
+    logger.info('Get List Data Addresses Success');
 
     res.status(200).json({
       status: true,
@@ -59,6 +66,8 @@ const update = async (req, res, next) => {
 
     const result = await addressService.update(req.user, contactId, request);
 
+    logger.info('Update Data Address Success');
+
     res.status(200).json({
       status: true,
       code: 200,
@@ -75,6 +84,8 @@ const remove = async (req, res, next) => {
     const { contactId, addressId } = req.params;
 
     await addressService.remove(req.user, contactId, addressId);
+
+    logger.info('Remove Data Address Success');
 
     res.status(200).json({
       status: true,

@@ -1,4 +1,5 @@
 import ResponseError from '../errors/ResponseError.js';
+import { logger } from '../utils/logging.js';
 
 const errorMiddleware = async (err, req, res, next) => {
   if (!err) {
@@ -7,6 +8,7 @@ const errorMiddleware = async (err, req, res, next) => {
   }
 
   if (err instanceof ResponseError) {
+    logger.error(err.message);
     res
       .status(err.status)
       .json({
@@ -16,6 +18,7 @@ const errorMiddleware = async (err, req, res, next) => {
       })
       .end();
   } else {
+    logger.error(err.message);
     res
       .status(500)
       .json({
