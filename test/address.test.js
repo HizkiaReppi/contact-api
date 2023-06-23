@@ -64,7 +64,7 @@ describe('POST /api/contacts/:contactId/addresses', () => {
       });
 
     expect(result.status).toBe(400);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBeDefined();
   });
@@ -84,7 +84,7 @@ describe('POST /api/contacts/:contactId/addresses', () => {
       });
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });
@@ -132,7 +132,7 @@ describe('GET /api/contacts/:contactId/addresses/:addressId', () => {
       .set('Authorization', 'test-token');
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });
@@ -146,7 +146,7 @@ describe('GET /api/contacts/:contactId/addresses/:addressId', () => {
       .set('Authorization', 'test-token');
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Address is not found');
   });
@@ -187,7 +187,7 @@ describe('GET /api/contacts/:contactId/addresses', () => {
       .set('Authorization', 'test-token');
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });
@@ -249,7 +249,7 @@ describe('PUT /api/contacts/:contactId/addresses/:addressId', () => {
       });
 
     expect(result.status).toBe(400);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBeDefined();
   });
@@ -270,7 +270,7 @@ describe('PUT /api/contacts/:contactId/addresses/:addressId', () => {
       });
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Address is not found');
   });
@@ -291,7 +291,7 @@ describe('PUT /api/contacts/:contactId/addresses/:addressId', () => {
       });
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });
@@ -338,7 +338,7 @@ describe('DELETE /api/contacts/:contactId/addresses/:addressId', () => {
       .set('Authorization', 'test-token');
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Address is not found');
   });
@@ -354,7 +354,7 @@ describe('DELETE /api/contacts/:contactId/addresses/:addressId', () => {
       .set('Authorization', 'test-token');
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });

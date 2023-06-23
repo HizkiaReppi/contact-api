@@ -10,7 +10,7 @@ const errorMiddleware = async (err, req, res, next) => {
     res
       .status(err.status)
       .json({
-        status: 'false',
+        status: false,
         code: err.status,
         errors: err.message,
       })
@@ -19,7 +19,7 @@ const errorMiddleware = async (err, req, res, next) => {
     res
       .status(500)
       .json({
-        status: 'false',
+        status: false,
         code: 500,
         errors: err.message,
       })

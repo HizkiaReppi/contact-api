@@ -1,7 +1,6 @@
 import supertest from 'supertest';
 import bcrypt from 'bcrypt';
 import { server } from '../src/utils/server.js';
-import { logger } from '../src/utils/logging.js';
 import {
   createTestUser,
   getTestUser,
@@ -21,10 +20,8 @@ describe('POST /api/users/register', () => {
       password: 'test123',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(201);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(201);
     expect(result.body.message).toBe('Register Success');
     expect(result.body.data.username).toBe('test');
@@ -41,10 +38,8 @@ describe('POST /api/users/register', () => {
       password: '',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(400);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBeDefined();
   });
@@ -57,10 +52,8 @@ describe('POST /api/users/register', () => {
       password: 'test123',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(201);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(201);
     expect(result.body.message).toBe('Register Success');
     expect(result.body.data.username).toBe('test');
@@ -75,10 +68,8 @@ describe('POST /api/users/register', () => {
       password: 'test123',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(400);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBe('Username already exists');
   });
@@ -99,10 +90,8 @@ describe('POST /api/users/login', () => {
       password: 'test123',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
     expect(result.body.message).toBe('Login Success');
     expect(result.body.data.token).toBeDefined();
@@ -115,10 +104,8 @@ describe('POST /api/users/login', () => {
       password: '',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(400);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBeDefined();
   });
@@ -129,10 +116,8 @@ describe('POST /api/users/login', () => {
       password: 'wrongTest',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(401);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(401);
     expect(result.body.errors).toBe('Username or password wrong');
   });
@@ -143,10 +128,8 @@ describe('POST /api/users/login', () => {
       password: 'wrongTest',
     });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(401);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(401);
     expect(result.body.errors).toBe('Username or password wrong');
   });
@@ -166,10 +149,8 @@ describe('GET /api/users/current', () => {
       .get('/api/users/current')
       .set('Authorization', 'test-token');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
     expect(result.body.message).toBe('Get Data Success');
     expect(result.body.data.name).toBe('test');
@@ -182,10 +163,8 @@ describe('GET /api/users/current', () => {
       .get('/api/users/current')
       .set('Authorization', 'tokenInvalid');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(401);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(401);
     expect(result.body.errors).toBe('Unauthorized');
   });
@@ -210,10 +189,8 @@ describe('PATCH /api/users/current', () => {
         password: 'admin123',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
     expect(result.body.message).toBe('Update Data Success');
     expect(result.body.data.username).toBe('test');
@@ -232,10 +209,8 @@ describe('PATCH /api/users/current', () => {
         name: 'Admin',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
     expect(result.body.message).toBe('Update Data Success');
     expect(result.body.data.username).toBe('test');
@@ -251,10 +226,8 @@ describe('PATCH /api/users/current', () => {
         email: 'admin@gmail.com',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
     expect(result.body.message).toBe('Update Data Success');
     expect(result.body.data.username).toBe('test');
@@ -270,10 +243,8 @@ describe('PATCH /api/users/current', () => {
         password: 'admin123',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
     expect(result.body.message).toBe('Update Data Success');
     expect(result.body.data.username).toBe('test');
@@ -290,10 +261,8 @@ describe('PATCH /api/users/current', () => {
       .set('Authorization', 'wrong-token')
       .send({});
 
-    logger.info(result.body);
-
     expect(result.status).toBe(401);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(401);
     expect(result.body.errors).toBe('Unauthorized');
   });
@@ -313,10 +282,8 @@ describe('DELETE /api/users/logout', () => {
       .delete('/api/users/logout')
       .set('Authorization', 'test-token');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
-    expect(result.body.status).toBe('true');
+    expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
     expect(result.body.message).toBe('Logout Success');
 
@@ -329,10 +296,8 @@ describe('DELETE /api/users/logout', () => {
       .delete('/api/users/logout')
       .set('Authorization', 'wrong-token');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(401);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(401);
     expect(result.body.errors).toBe('Unauthorized');
   });

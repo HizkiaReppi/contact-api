@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import { server } from '../src/utils/server.js';
-import { logger } from '../src/utils/logging.js';
 import {
   createManyTestContacts,
   createTestContact,
@@ -31,8 +30,6 @@ describe('POST /api/contacts', () => {
         phone: '082345678910',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(201);
     expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(201);
@@ -56,7 +53,7 @@ describe('POST /api/contacts', () => {
       });
 
     expect(result.status).toBe(400);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBeDefined();
   });
@@ -79,8 +76,6 @@ describe('GET /api/contact/:contactId', () => {
       .get(`/api/contacts/${testContact.id}`)
       .set('Authorization', 'test-token');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
     expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
@@ -98,10 +93,8 @@ describe('GET /api/contact/:contactId', () => {
       .get(`/api/contacts/${testContact.id}-wrong`)
       .set('Authorization', 'test-token');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });
@@ -130,8 +123,6 @@ describe('PUT /api/contact/:contactId', () => {
         phone: '0823456789',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
     expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
@@ -155,10 +146,8 @@ describe('PUT /api/contact/:contactId', () => {
         phone: '',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(400);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(400);
     expect(result.body.errors).toBeDefined();
   });
@@ -175,10 +164,8 @@ describe('PUT /api/contact/:contactId', () => {
         phone: '0823456789',
       });
 
-    logger.info(result.body);
-
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });
@@ -218,8 +205,6 @@ describe('GET /api/contacts', () => {
       })
       .set('Authorization', 'test-token');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
     expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
@@ -237,8 +222,6 @@ describe('GET /api/contacts', () => {
         name: 'test 1',
       })
       .set('Authorization', 'test-token');
-
-    logger.info(result.body);
 
     expect(result.status).toBe(200);
     expect(result.body.status).toBe(true);
@@ -258,8 +241,6 @@ describe('GET /api/contacts', () => {
       })
       .set('Authorization', 'test-token');
 
-    logger.info(result.body);
-
     expect(result.status).toBe(200);
     expect(result.body.status).toBe(true);
     expect(result.body.code).toBe(200);
@@ -277,8 +258,6 @@ describe('GET /api/contacts', () => {
         phone: '08234567891',
       })
       .set('Authorization', 'test-token');
-
-    logger.info(result.body);
 
     expect(result.status).toBe(200);
     expect(result.body.status).toBe(true);
@@ -324,7 +303,7 @@ describe('DELETE /api/contacts/:contactId', () => {
       .set('Authorization', 'test-token');
 
     expect(result.status).toBe(404);
-    expect(result.body.status).toBe('false');
+    expect(result.body.status).toBe(false);
     expect(result.body.code).toBe(404);
     expect(result.body.errors).toBe('Contact is not found');
   });
