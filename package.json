@@ -11,8 +11,7 @@
     "test": "jest -i",
     "format": "prettier --write \"src/**/*.js\"",
     "lint": "eslint \"src/**/*.js\"",
-    "check-format": "prettier --check .",
-    "check-lint": "eslint . --ext js"
+    "check-format": "prettier --check ."
   },
   "jest": {
     "transform": {
